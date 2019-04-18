@@ -8,7 +8,7 @@ public class VarDecl implements ASTNode {
 	private String name;
 	private ASTNode data;
 	
-	public VarDecl(String name, ASTNode value) {
+	public VarDecl(String name, ASTNode data) {
 		super();
 		this.name = name;
 		this.data = data;
@@ -16,8 +16,8 @@ public class VarDecl implements ASTNode {
 
 	@Override
 	public Object execute(Stack<Map<String, Object>>  symbolTable, ProgrammData programmData) {
-		if(symbolTable.peek().containsKey(this.name)){	
-			System.err.println("Ya existe una variable con el nombre.");
+		if(symbolTable.peek().containsKey(this.name)){
+			System.err.println("-> ERROR la variable "+this.name+" ya fue declarada");
 			System.exit(0);
 		}
 		

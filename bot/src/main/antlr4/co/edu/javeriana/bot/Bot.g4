@@ -101,10 +101,6 @@ varassign returns [ASTNode node]: ID EQUAL
 		(
 		 expression SEMICOLON {$node=new VarAssign($ID.text,$expression.node);} 
 		 )
-		;
-		
-vardeclassign returns [ASTNode node]: 
-	LET ID EQUAL expression { $node = new VarLetAssign($ID.text, $expression.node);}
 ;
 	
 //-----------------------------------------------------------------------------------
@@ -131,11 +127,11 @@ ifbot returns [ASTNode node]:
 	IF ORBRACKET condition CRBRACKET
 		BEGIN
 		(body=viscera)
-		END 
+		END SEMICOLON
 		(
 			ELSE (elsebody=viscera) SEMICOLON
 			 {
-			 	$node=new IfBot($c.node,$body.body,$elsebody.body);
+			 	$node=new IfBot($condition.node,$body.body,$elsebody.body);
 			 }
 		 )?		  
 ;
@@ -167,7 +163,7 @@ forbot returns [ASTNode node]:
 ;
 
 init returns [ASTNode node]: 
-	varassign {$node = $varassign.node;} | vardeclassign {$node = $vardeclassign.node;}
+	varassign {$node = $varassign.node;} | vardecl {$node = $vardecl.node;}
 ;
 
 ender returns [ASTNode node]:
