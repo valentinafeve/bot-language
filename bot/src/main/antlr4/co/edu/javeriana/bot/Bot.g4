@@ -15,39 +15,47 @@ grammar Bot;
 	public BotParser(TokenStream input, Bot bot) {
 	    this(input);
 	    this.bot = bot;
-	}	
+	}
 }
 
 // No tocar, cualquier cambio lo hace estallar
 programm: {
-			ProgrammData programmData= new ProgrammData(bot);
+			ProgrammData programmData = new ProgrammData(bot);
 			List<ASTNode> sentences=new ArrayList<ASTNode>();
 		}
-		(content)
+		(s1=sentence{sentences.add($s1.node);})*
 		{
 			for(ASTNode n:sentences){
 				n.execute(programmData.getSymbolTables(),programmData);
 			}
-		};
-		
-content: (function | viscera)((function | viscera)*);		
+		}
+		;
+
 sentence returns [ASTNode node] : 
-functioncall {$node=$functioncall.node;}|
-vardecl {$node=$vardecl.node;}| 
-varassign {$node=$varassign.node;}|
-writeln {$node=$writeln.node;}|
-write {$node=$write.node;}|
-read {$node=$read.node;}| 
-pick {$node=$pick.node;}| 
-drop {$node=$drop.node;}| 
-look {$node=$look.node;}| 
-up {$node=$up.node;}| 
-down {$node=$down.node;}| 
-left {$node=$left.node;}| 
-right {$node=$right.node;}|
-whilebot{$node=$whilebot.node;}|
-ifbot{$node=$ifbot.node;}	
+		function {$node =$function.node;}|
+		functioncall {$node=$functioncall.node;}|
+		vardecl {$node=$vardecl.node;}| 
+		varassign {$node=$varassign.node;}|
+		writeln {$node=$writeln.node;}|
+		write {$node=$write.node;}|
+		read {$node=$read.node;}| 
+		pick {$node=$pick.node;}| 
+		drop {$node=$drop.node;}| 
+		look {$node=$look.node;}| 
+		up {$node=$up.node;}| 
+		down {$node=$down.node;}| 
+		left {$node=$left.node;}| 
+		right {$node=$right.node;}|
+		whilebot{$node=$whilebot.node;}|
+		ifbot{$node=$ifbot.node;}	
 ;
+
+viscera returns [Viscera body]:
+			{
+				$body=new Viscera();
+			}
+			(s1=sentence{$body.add($s1.node);})*
+			;
 
 //-----------------------------------------------------------------------------------
 // 1.	Comandos del robot
@@ -120,18 +128,16 @@ term returns [ASTNode node]:
 // 4. Condicionales
 
 ifbot returns [ASTNode node]: 	
-	{
-		List<ASTNode> body = new ArrayList<ASTNode>();
-		List<ASTNode> elseBody = new ArrayList<ASTNode>();
-	}
 	IF ORBRACKET condition CRBRACKET
-	BEGIN 
-		viscera 
-	END SEMICOLON 
-	(ELSE BEGIN 
-		viscera
-	END SEMICOLON)?
-	{$node = new IfBot($condition.node,body,elseBody);}
+		BEGIN
+		(body=viscera)
+		END 
+		(
+			ELSE (elsebody=viscera) SEMICOLON
+			 {
+			 	$node=new IfBot($c.node,$body.body,$elsebody.body);
+			 }
+		 )?		  
 ;
 
 //-----------------------------------------------------------------------------------
@@ -153,7 +159,7 @@ forbot returns [ASTNode node]:
 	}
 	FOR ORBRACKET init SEMICOLON condition SEMICOLON ender CRBRACKET 
 	BEGIN 
-		viscera
+		(sentence)* 
 	END SEMICOLON
 	{
 		//$node = new ForBot($init.node,$condition.node,$ender.node,body);
@@ -248,7 +254,7 @@ condition returns [ASTNode node]:
 function returns [ASTNode node]: {
 			
 		}
-		FUNCTION ID input_function BEGIN viscera END SEMICOLON
+		FUNCTION ID ORBRACKET input_function CRBRACKET BEGIN viscera END SEMICOLON
 		{
 			$node = new Function($ID.text,$input_function.parameters,$viscera.body);
 		}
@@ -256,23 +262,15 @@ function returns [ASTNode node]: {
 
 //-----------------------------------------------------------------------------------
 // 11. Invocación de funciones
-viscera returns [Viscera body]:
-			{
-				$body=new Viscera();
-			}
-			(s1=sentence{$body.add($s1.node);})((s1=sentence{$body.add($s1.node);})*)
-			;
 			
 input_function returns [List<String> parameters]: 
 				{
 					$parameters=new ArrayList<String>();
 				}
-				ORBRACKET 
-				in1=input{$parameters.add($in1.var_name);} (COMMA in2=input{$parameters.add($in2.var_name);})* CRBRACKET;
+				in1=input{$parameters.add($in1.var_name);} 
+				(COMMA in2=input{$parameters.add($in2.var_name);})*;
+
 input returns [String var_name]: LET ID{$var_name=$ID.text;};
-
-						
-
 
 functioncall returns [ASTNode node]:
 			{
@@ -318,8 +316,6 @@ ORBRACKET:'(';
 CRBRACKET:')';
 OSBRACKET:'(';
 CSBRACKET:')';
-OBRACKET:'{';
-CBRACKET:'}';
 
 NOTEQ: '!=' | '<>';
 EQUALS:'==';
