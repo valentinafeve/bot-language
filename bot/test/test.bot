@@ -1,14 +1,33 @@
-function printiin()
+function diagonal(let length)
 begin
-writeln "Printiin";
+	let counter = 0;
+	while (counter < length)
+	begin
+		down 1;
+		right 1;
+		counter = counter + 1;
+	end;
+	writeln "diagonal terminada";
 end;
-let length;
-length = 3;
-let counter = 0;
-while (counter < length)
-begin	
-	right 1;
-	down 1;
-	counter = counter + 1;
-	printiin();
+
+function test(let a,let b)
+begin
+	if( a > b )
+	begin
+		return a;
+	end;
+	return b;
 end;
+
+diagonal(4);
+let miVariable2 = "Perdon por daniar el if";
+writeln miVariable2;
+miVariable2="Y el for lol";
+let a=1;
+writeln miVariable2;
+writeln a;
+writeln miVariable2;
+let c;
+c="un resultado";
+writeln c;
+writeln "Resultado es "+c;

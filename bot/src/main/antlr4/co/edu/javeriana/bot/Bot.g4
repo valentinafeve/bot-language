@@ -47,7 +47,8 @@ sentence returns [ASTNode node] :
 		left {$node=$left.node;}| 
 		right {$node=$right.node;}|
 		whilebot{$node=$whilebot.node;}|
-		ifbot{$node=$ifbot.node;}	
+		ifbot{$node=$ifbot.node;}|
+		return_{$node=$return_.node;}
 ;
 
 viscera returns [Viscera body]:
@@ -282,7 +283,12 @@ functioncall returns [ASTNode node]:
 				$node = new FunctionCall($ID.text,expressions);
 			}
 			;
-
+			
+//-----------------------------------------------------------------------------------
+// 12. Return
+return_ returns [ASTNode node]: RETURN expression SEMICOLON
+			{$node=new Return($expression.node);}
+			;
 
 //-----------------------------------------------------------------------------------
 // TOKENS
@@ -297,6 +303,7 @@ DROP: 'drop';
 
 //Reserved words
 FUNCTION: 'function';
+RETURN: 'return';
 END: 'end';
 BEGIN: 'begin';
 WRITELN: 'writeln';
