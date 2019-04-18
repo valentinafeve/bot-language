@@ -10,11 +10,11 @@ public class IfBot implements ASTNode{
 	private List<ASTNode> elseBody;
 
 
-	public IfBot(ASTNode condition, List<ASTNode> body, List<ASTNode> elseBody) {
+	public IfBot(ASTNode condition, Viscera body, Viscera elseBody) {
 		super();
 		this.condition = condition;
-		this.body = body;
-		this.elseBody = elseBody;
+		this.body = body.getBody();
+		this.elseBody = elseBody.getBody();
 	}
 
 

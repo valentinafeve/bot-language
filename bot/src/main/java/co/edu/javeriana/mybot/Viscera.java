@@ -36,6 +36,14 @@ public class Viscera implements ASTNode {
 		return null;
 	}
 	
+	public List<ASTNode> getBody() {
+		return body;
+	}
+
+	public void setBody(List<ASTNode> body) {
+		this.body = body;
+	}
+
 	public void add(ASTNode node){
 		this.body.add(node);
 	}
