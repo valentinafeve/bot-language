@@ -30,7 +30,8 @@ public class Main {
 
 				BotCustomVisitor visitor = new BotCustomVisitor();
 				visitor.visit(tree);
-				
+
+				bot.right(1);
 				System.out.println("Interpretation finished");
 
 			}
