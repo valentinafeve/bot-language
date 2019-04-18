@@ -3,6 +3,8 @@ package com.botlanguage.interpeter;
 import java.util.Map;
 import java.util.Scanner;
 
+import org.jpavlich.bot.Bot;
+
 public class Read implements ASTNode {
 	private String name;
 	
@@ -11,7 +13,7 @@ public class Read implements ASTNode {
 	}
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable) {
+	public Object execute(Map<String, Object> symbolTable, Bot bot) {
 		Scanner in = new Scanner(System.in);
 		String s = in.nextLine();
 		in.close();

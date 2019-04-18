@@ -2,6 +2,8 @@ package com.botlanguage.interpeter;
 
 import java.util.Map;
 
+import org.jpavlich.bot.Bot;
+
 public class Constant implements ASTNode {
 	
 	private Object value;
@@ -12,7 +14,7 @@ public class Constant implements ASTNode {
 	}
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable) {
+	public Object execute(Map<String, Object> symbolTable, Bot bot) {
 		return value;
 	}
 

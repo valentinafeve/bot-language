@@ -25,7 +25,7 @@ programm:
 	(sentence {body.add($sentence.node);})*
 	{
 		for(ASTNode n : body){
-			n.execute(symbolTable);
+			n.execute(symbolTable, bot);
 		}	
 	}
 ;
@@ -59,31 +59,36 @@ sentence returns [ASTNode node]:
 //-----------------------------------------------------------------------------------
 // 1.	Comandos del robot
 
+up returns[ASTNode node] : 
+	UP expression {$node=new Up($expression.node);}
+;
+								
+down returns[ASTNode node] : 
+	DOWN expression {$node=new Down($expression.node);}
+;
+																
+left returns[ASTNode node] :
+	LEFT expression {$node=new Left($expression.node);}
+;
+								
+right returns[ASTNode node] : 
+	RIGHT expression {$node=new Right($expression.node);}
+;	
+
 pick returns[ASTNode node] : 
 	PICK {$node=new Pick();}
 ;
+
 drop returns[ASTNode node] : 
 	DROP {$node=new Drop();}
 ;
+
 look returns[ASTNode node] : 
 	LOOK {$node=new Look();}
 ;
 
-up returns[ASTNode node] : UP expression
-	{$node=new Up($expression.node);}
+action returns [ASTNode node]:
 ;
-								
-down returns[ASTNode node] : DOWN expression
-	{$node=new Down($expression.node);}
-;
-																
-left returns[ASTNode node] :LEFT expression
-	{$node=new Left($expression.node);}
-;
-								
-right returns[ASTNode node] : RIGHT expression
-	{$node=new Right($expression.node);}
-;	
 
 //-----------------------------------------------------------------------------------
 // 2. Variables
@@ -120,7 +125,7 @@ term returns [ASTNode node]:
 	| 
 	WORD {$node = new Constant($WORD.text.substring(1,$WORD.text.length()-1));}
 	|
-	ORBRACKET condition {$node = $condition.node;} CRBRACKET
+	( ORBRACKET condition {$node = $condition.node;} CRBRACKET )
 ;
 
 //-----------------------------------------------------------------------------------
@@ -212,12 +217,20 @@ read returns [ASTNode node]:
 // 7. Expresiones aritméticas
 
 expression returns [ASTNode node]: 
-	t1=factor{$node = $t1.node;}
 	(
-		(PLUS t2=factor{$node = new Addition($node, $t2.node);})
-		|
-		(MINUS t2=factor{$node = new Subtraction($node, $t2.node);})
-	)*
+		t1=factor{$node = $t1.node;}
+		(
+			(PLUS t2=factor{$node = new Addition($node, $t2.node);})
+			|
+			(MINUS t2=factor{$node = new Subtraction($node, $t2.node);})
+		)* 
+	)
+	|
+	look {$node = $look.node;} 
+	| 
+	drop {$node = $drop.node;} 
+	| 
+	pick {$node = $pick.node;}
 ;
 		
 factor returns [ASTNode node]:	

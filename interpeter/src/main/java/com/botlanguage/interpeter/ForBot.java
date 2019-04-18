@@ -3,6 +3,8 @@ package com.botlanguage.interpeter;
 import java.util.List;
 import java.util.Map;
 
+import org.jpavlich.bot.Bot;
+
 public class ForBot implements ASTNode{
 	private ASTNode initializer;
 	private ASTNode condition;
@@ -18,13 +20,13 @@ public class ForBot implements ASTNode{
 	}
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable) {
-		initializer.execute(symbolTable);
-		while((boolean) condition.execute(symbolTable)) {
+	public Object execute(Map<String, Object> symbolTable, Bot bot) {
+		initializer.execute(symbolTable, bot);
+		while((boolean) condition.execute(symbolTable, bot)) {
 			for(ASTNode n : body) {
-				n.execute(symbolTable);
+				n.execute(symbolTable, bot);
 			}
-			ender.execute(symbolTable);
+			ender.execute(symbolTable, bot);
 		} 
 		return null;
 	}

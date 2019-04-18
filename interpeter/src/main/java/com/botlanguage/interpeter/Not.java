@@ -2,6 +2,8 @@ package com.botlanguage.interpeter;
 
 import java.util.Map;
 
+import org.jpavlich.bot.Bot;
+
 public class Not implements ASTNode {
 	private ASTNode operand;
 	
@@ -11,8 +13,8 @@ public class Not implements ASTNode {
 	}
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable) {
-		return !(boolean)operand.execute(symbolTable);
+	public Object execute(Map<String, Object> symbolTable, Bot bot) {
+		return !(boolean)operand.execute(symbolTable, bot);
 	}
 
 }

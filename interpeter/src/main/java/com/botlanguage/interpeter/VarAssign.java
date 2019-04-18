@@ -2,6 +2,8 @@ package com.botlanguage.interpeter;
 
 import java.util.Map;
 
+import org.jpavlich.bot.Bot;
+
 public class VarAssign implements ASTNode {
 
 	private String name;
@@ -14,8 +16,8 @@ public class VarAssign implements ASTNode {
 	}
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable) {
-		symbolTable.put(name,expression.execute(symbolTable));
+	public Object execute(Map<String, Object> symbolTable, Bot bot) {
+		symbolTable.put(name,expression.execute(symbolTable, bot));
 		return null;
 	}
 }

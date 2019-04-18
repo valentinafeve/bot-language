@@ -2,6 +2,8 @@ package com.botlanguage.interpeter;
 
 import java.util.Map;
 
+import org.jpavlich.bot.Bot;
+
 public class Writeln implements ASTNode {
 	private ASTNode data;
 
@@ -11,8 +13,8 @@ public class Writeln implements ASTNode {
 	}
 	
 	@Override
-	public Object execute(Map<String, Object> symbolTable) {
-		System.out.println(data.execute(symbolTable));
+	public Object execute(Map<String, Object> symbolTable, Bot bot) {
+		System.out.println(data.execute(symbolTable, bot));
 		return null;
 	}
 }

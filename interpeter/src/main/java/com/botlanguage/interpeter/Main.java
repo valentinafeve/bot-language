@@ -12,7 +12,7 @@ public class Main {
 
 	private static final String EXTENSION = "bot";
 	
-	/*
+	
 	public static void main(String[] args) throws IOException {
 
 		BotApplication app = new BotApplication(50) {
@@ -40,8 +40,8 @@ public class Main {
 		app.start();
 
 	}
-	*/
 	
+	/*
 	public static void main(String[] args) throws IOException {
 		String program = args.length > 1 ? args[1] : "test/test." + EXTENSION;
 
@@ -51,13 +51,10 @@ public class Main {
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		botParser parser = new botParser(tokens);
 
-	/*	botParser.ProgrammContext tree = */parser.programm();
-
-	//	botCustomVisitor visitor = new botCustomVisitor();
-	//	visitor.visit(tree);
-
-		System.out.println("Interpretation finished");
+		parser.programm();
+ 
+ 		System.out.println("Interpretation finished");
 
 	}
-
+	*/
 }

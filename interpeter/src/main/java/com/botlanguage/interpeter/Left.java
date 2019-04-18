@@ -1,7 +1,8 @@
 package com.botlanguage.interpeter;
 
 import java.util.Map;
-import java.util.Stack;
+
+import org.jpavlich.bot.Bot;
 
 public class Left implements ASTNode {
 
@@ -13,8 +14,8 @@ public class Left implements ASTNode {
 	}
 
 	@Override
-	public Object execute(Stack<Map<String, Object>>  symbolTable, ProgrammData programInfo){
-		// TODO Auto-generated method stub
+	public Object execute(Map<String, Object> symbolTable, Bot bot) {
+		bot.left((int) expression.execute(symbolTable,bot));
 		return null;
 	}
 

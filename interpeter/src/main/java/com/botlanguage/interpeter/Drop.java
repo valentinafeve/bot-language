@@ -1,14 +1,18 @@
 package com.botlanguage.interpeter;
 
 import java.util.Map;
-import java.util.Stack;
+
+import org.jpavlich.bot.Bot;
 
 public class Drop implements ASTNode {
+	
+	public Drop() {
+		super();
+	}
 
 	@Override
-	public Object execute(Stack<Map<String, Object>>  symbolTable, ProgrammData programInfo){
-		// TODO Auto-generated method stub
-		return null;
+	public Object execute(Map<String, Object> symbolTable, Bot bot) {
+		return bot.drop();
 	}
 
 }
