@@ -1,0 +1,12 @@
+writeln "Error Message";
+for(let i=3 ; i>0;i--) begin
+	writeln i;
+end;
+let j = 0;
+while(j<3) begin
+	writeln j;
+	j++;
+end;
+
+read j;
+writeln j+20;

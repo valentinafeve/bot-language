@@ -11,7 +11,7 @@ class Up extends Action<Integer> {
 
 	@Override
 	public Response<Integer> execute() {
-		System.out.println("Subiendo");
+		
 		return new Response<Integer>(bot.up(steps));
 	}
 

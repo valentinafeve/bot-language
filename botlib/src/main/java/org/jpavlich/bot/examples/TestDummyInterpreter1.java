@@ -12,18 +12,28 @@ public class TestDummyInterpreter1 {
 
 			@Override
 			protected void execute(Bot bot) throws Throwable {
-				for (int j = 0; j < 1; j++) {
-					for (int i = 0; i < 1; i++) {
+				for (int j = 0; j < 8; j++) {
+					for (int i = 0; i < 12; i++) {
 						bot.right(1);
+						printLook(bot);
 					}
 					bot.down(1);
-					for (int i = 0; i < 1; i++) {
+					printLook(bot);
+					for (int i = 0; i < 12; i++) {
 						bot.left(1);
+						printLook(bot);
 					}
 					bot.down(1);
+					printLook(bot);
 				}
 			}
 
+			private void printLook(Bot bot) {
+				int look = bot.look();
+				if (look > 0) {
+					System.out.println(look);
+				}
+			}
 		};
 		
 		app.start();
