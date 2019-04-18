@@ -1,2 +1,14 @@
-down 4;
-left 5;
+function printiin()
+begin
+writeln "Printiin";
+end;
+let length;
+length = 3;
+let counter = 0;
+while (counter < length)
+begin	
+	right 1;
+	down 1;
+	counter = counter + 1;
+	printiin();
+end;

@@ -10,8 +10,8 @@ public class Drop implements ASTNode {
 		try{
 			programmData.getBot().drop();
 		} catch (Exception e) {
-			 System.err.println("-> ERROR en South la expresion no es posible castear a entero");
-			 System.exit(0);
+			System.err.println("Error en Drop.");
+			System.exit(0);
 		}
 		return null;
 	}

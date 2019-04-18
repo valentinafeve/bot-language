@@ -15,9 +15,9 @@ public class Left implements ASTNode {
 	@Override
 	public Object execute(Stack<Map<String, Object>>  symbolTable, ProgrammData programmData){
 		try{
-			programmData.getBot().down((int)((double)(this.expression.execute(symbolTable, programmData))));
+			programmData.getBot().down((int)((this.expression.execute(symbolTable, programmData))));
 		} catch (Exception e) {
-			 System.err.println("-> ERROR en South la expresion no es posible castear a entero");
+			System.err.println("Error en Left.");
 			 System.exit(0);
 		}
 		return null;

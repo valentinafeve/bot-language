@@ -10,8 +10,8 @@ public class Look implements ASTNode {
 		try{
 			programmData.getBot().look();
 		} catch (Exception e) {
-			 System.err.println("-> ERROR en South la expresion no es posible castear a entero");
-			 System.exit(0);
+			System.err.println("Error en Look.");
+			System.exit(0);
 		}
 		return null;
 	}

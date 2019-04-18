@@ -254,6 +254,11 @@ function returns [ASTNode node]: {
 		{
 			$node = new Function($ID.text,$input_function.parameters,$viscera.body);
 		}
+		|
+		FUNCTION ID ORBRACKET CRBRACKET BEGIN viscera END SEMICOLON
+		{
+			$node = new Function($ID.text,$viscera.body);
+		}
 ;
 
 //-----------------------------------------------------------------------------------

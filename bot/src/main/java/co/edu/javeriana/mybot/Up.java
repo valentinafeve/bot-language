@@ -15,9 +15,9 @@ public class Up implements ASTNode {
 	@Override
 	public Object execute(Stack<Map<String, Object>>  symbolTable, ProgrammData programmData) {
 		try{
-			programmData.getBot().up((int)((double)(this.expression.execute(symbolTable, programmData))));
+			programmData.getBot().up((int)((this.expression.execute(symbolTable, programmData))));
 		} catch (Exception e) {
-			 System.err.println("-> ERROR en South la expresion no es posible castear a entero");
+			System.err.println("Error en Up.");
 			 System.exit(0);
 		}
 		return null;

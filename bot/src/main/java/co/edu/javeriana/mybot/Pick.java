@@ -9,8 +9,8 @@ public class Pick implements ASTNode {
 		try{
 			programmData.getBot().pick();
 		} catch (Exception e) {
-			 System.err.println("-> ERROR en South la expresion no es posible castear a entero");
-			 System.exit(0);
+			System.err.println("Error en Pick.");
+			System.exit(0);
 		}
 		return null;
 	}

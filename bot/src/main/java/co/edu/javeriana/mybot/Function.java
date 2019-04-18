@@ -1,5 +1,6 @@
 package co.edu.javeriana.mybot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,13 @@ public class Function implements ASTNode{
 		super();
 		this.name = functionName;
 		this.inputParameters = inputParameters;
+		this.viscera = viscera;
+	}
+	
+	public Function(String functionName, Viscera viscera) {
+		super();
+		this.name = functionName;
+		this.inputParameters = new ArrayList<String>();
 		this.viscera = viscera;
 	}
 	
