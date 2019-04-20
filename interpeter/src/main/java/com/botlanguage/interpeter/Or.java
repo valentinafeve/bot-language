@@ -1,5 +1,6 @@
 package com.botlanguage.interpeter;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jpavlich.bot.Bot;
@@ -15,8 +16,8 @@ public class Or implements ASTNode {
 	}
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable, Bot bot) {
-		return (boolean)operand1.execute(symbolTable, bot) || (boolean)operand2.execute(symbolTable, bot);
+	public Object execute(List<Map<String,Object>> symbolTable, Bot bot, Map<String, Function> functionTable) {
+		return (boolean)operand1.execute(symbolTable, bot, functionTable) || (boolean)operand2.execute(symbolTable, bot, functionTable);
 	}
 
 }

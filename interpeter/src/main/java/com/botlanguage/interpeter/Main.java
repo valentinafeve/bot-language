@@ -18,7 +18,7 @@ public class Main {
 
 			@Override
 			protected void execute(Bot bot) throws Throwable {
-				String program = args.length > 1 ? args[1] : "test/test." + EXTENSION;
+				String program = args.length > 1 ? args[1] : "test/testF." + EXTENSION;
 
 				botLexer lexer = new botLexer(new ANTLRFileStream(program));
 
@@ -32,10 +32,9 @@ public class Main {
 				botCustomVisitor visitor = new botCustomVisitor();
 				visitor.visit(tree);
 
-				System.out.println("Interpretation finished");
+				System.out.println("\nInterpretation finished");
 			}
 		};
-
 		app.start();
 
 	}

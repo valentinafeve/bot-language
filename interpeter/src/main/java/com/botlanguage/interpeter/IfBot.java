@@ -1,5 +1,6 @@
 package com.botlanguage.interpeter;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,16 +21,21 @@ public class IfBot implements ASTNode{
 
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable, Bot bot) {
-		if ((boolean) condition.execute(symbolTable, bot)) {
+	public Object execute(List<Map<String,Object>> symbolTable, Bot bot, Map<String, Function> functionTable) {
+		Map<String,Object> newScope = new HashMap<String, Object>(); 
+		symbolTable.add(newScope);
+		
+		if ((boolean) condition.execute(symbolTable, bot, functionTable)) {
 			for(ASTNode n : body) {
-				n.execute(symbolTable, bot);
+				n.execute(symbolTable, bot, functionTable);
 			}
 		} else if(!elseBody.isEmpty()){
 			for(ASTNode n : elseBody) {
-				n.execute(symbolTable, bot);
+				n.execute(symbolTable, bot, functionTable);
 			}
 		}
+		
+		symbolTable.remove(symbolTable.size()-1);
 		return null;
 	}
 

@@ -3,7 +3,7 @@ begin
 	let counter = 0;
 	while (counter < length)
 	begin
-		up 1;
+		down 1;
 		right 1;
 		counter = counter + 1;
 	end;

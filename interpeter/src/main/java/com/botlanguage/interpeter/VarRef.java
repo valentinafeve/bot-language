@@ -1,5 +1,6 @@
 package com.botlanguage.interpeter;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jpavlich.bot.Bot;
@@ -14,8 +15,13 @@ private String name;
 	}
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable, Bot bot) {
-		return symbolTable.get(name);
+	public Object execute(List<Map<String,Object>> symbolTable, Bot bot, Map<String, Function> functionTable) {
+		for(int i=1;i<=symbolTable.size();i++) {
+			if(symbolTable.get(symbolTable.size()-i).containsKey(name)) {
+				return symbolTable.get(symbolTable.size()-i).get(name);
+			}
+		}
+		return null;
 	}
 
 }

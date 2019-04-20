@@ -1,5 +1,6 @@
 package com.botlanguage.interpeter;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jpavlich.bot.Bot;
@@ -14,8 +15,8 @@ public class VarDecl implements ASTNode {
 	}
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable, Bot bot) {
-		symbolTable.put(name, null);
+	public Object execute(List<Map<String,Object>> symbolTable, Bot bot, Map<String, Function> functionTable) {
+		symbolTable.get(symbolTable.size()-1).put(name, null);
 		return null;
 	}
 }

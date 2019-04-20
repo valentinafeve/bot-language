@@ -1,6 +1,8 @@
 grammar bot;
 
 @parser::header{
+	import java.util.List;
+	import java.util.ArrayList;
 	import java.util.Map;
 	import java.util.HashMap;
 	import java.lang.Math;
@@ -9,7 +11,7 @@ grammar bot;
 
 @parser::members{
 	private Bot bot;
-	Map<String, ASTNode> symbolTable = new HashMap<String, ASTNode>();
+	List<Map<String, ASTNode>> symbolTable = new ArrayList<Map<String, ASTNode>>();
 	public botParser(TokenStream input, Bot bot) {
 	    this(input);
 	    this.bot = bot;
@@ -20,12 +22,16 @@ grammar bot;
 programm: 
 	{
 		List<ASTNode> body = new ArrayList<ASTNode>();
-		Map<String,Object> symbolTable = new HashMap<String,Object>();
+		List<Map<String,Object>> symbolTable = new ArrayList<Map<String,Object>>();
+		Map<String,Function> functionTable = new HashMap<String,Function>();
+		
+		Map<String,Object> defSymbol = new HashMap<String,Object>();
+		symbolTable.add(defSymbol);
 	}
 	(sentence {body.add($sentence.node);})*
 	{
 		for(ASTNode n : body){
-			n.execute(symbolTable, bot);
+			n.execute(symbolTable, bot, functionTable);
 		}	
 	}
 ;
@@ -50,10 +56,9 @@ sentence returns [ASTNode node]:
 	(writeln {$node = $writeln.node;} SEMMICOLON) |
 	(write {$node = $write.node;} SEMMICOLON) |
 	(read {$node = $read.node;} SEMMICOLON) |
-//	(function {$node = $function.node;} SEMMICOLON) |
-//	(returnbot {$node = $read.node;} SEMMICOLON) |
-//	(functioncall {$node=$functioncall.node;} SEMMICOLON)
-	SEMMICOLON
+	(function {$node = $function.node;}) |
+	(returncall {$node = $returncall.node;} SEMMICOLON) |
+	(functioncall {$node=$functioncall.node;} SEMMICOLON)
 ;
 
 //-----------------------------------------------------------------------------------
@@ -278,16 +283,36 @@ condition returns [ASTNode node]:
 //-----------------------------------------------------------------------------------
 // 10. Declaración de funciones
 
-function: FUNCTION ID ORBRACKET (parameter? (COMMA parameter)*) CRBRACKET BEGIN sentence* END SEMMICOLON;
-
-parameter: LET ID;
-
-returnbot: 'none';
+function returns [ASTNode node]: 
+	{
+		List<ASTNode> body = new ArrayList<ASTNode>();
+		List<String> parameters = new ArrayList<String>();
+		ASTNode returnval = null;
+	}
+	FUNCTION name=ID ORBRACKET (LET param=ID {parameters.add($param.text);})* CRBRACKET
+	BEGIN 
+		(s=sentence {body.add($s.node);})* 
+		(RETURN expression SEMMICOLON {returnval = $expression.node;})? 
+	END SEMMICOLON
+	{$node = new Function($name.text, body, parameters, returnval);}
+;
 
 //-----------------------------------------------------------------------------------
 // 11. Invocación de funciones
 
-functioncall: ID ORBRACKET (expression? (COMMA expression)*) CRBRACKET SEMMICOLON;
+returncall returns [ASTNode node]:
+	(ID EQUAL functioncall {$node = new VarAssign($ID.text,$functioncall.node);})
+	|
+	(LET ID EQUAL functioncall {$node = new VarLetAssign($ID.text,$functioncall.node);})
+;
+
+functioncall returns [ASTNode node]: 
+	{
+		List<ASTNode> parameters = new ArrayList<ASTNode>();
+	}
+	ID ORBRACKET (p1=expression? {parameters.add($p1.node);} (COMMA p2=expression {parameters.add($p2.node);})*) CRBRACKET
+	{$node = new FunctionCall($ID.text,parameters);}
+;
 
 //-----------------------------------------------------------------------------------
 // TOKENS
@@ -313,6 +338,7 @@ FOR: 'for';
 IF: 'if';
 ELSE: 'else';
 ELIF: 'elif';
+RETURN: 'return';
 
 //Signs
 SEMMICOLON:';';

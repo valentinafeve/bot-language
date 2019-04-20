@@ -1,4 +1,13 @@
-writeln "Error Message";
+writeln "There is no Error Message";
 
-right 2;
-writeln look;
+function yo(let x)
+begin
+	writeln x;
+	return x+1;
+end;
+
+let w = 3;
+
+w = yo(w);
+writeln w;
+down w;

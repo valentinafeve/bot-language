@@ -1,5 +1,6 @@
 package com.botlanguage.interpeter;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jpavlich.bot.Bot;
@@ -16,9 +17,9 @@ public class VarLetAssign implements ASTNode {
 	}
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable, Bot bot) {
-		symbolTable.put(name,null);
-		symbolTable.put(name,expression.execute(symbolTable, bot));
+	public Object execute(List<Map<String,Object>> symbolTable, Bot bot, Map<String, Function> functionTable) {
+		symbolTable.get(symbolTable.size()-1).put(name,null);
+		symbolTable.get(symbolTable.size()-1).put(name,expression.execute(symbolTable, bot, functionTable));
 		return null;
 	}
 }

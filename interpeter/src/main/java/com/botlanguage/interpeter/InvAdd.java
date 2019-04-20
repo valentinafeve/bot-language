@@ -1,5 +1,6 @@
 package com.botlanguage.interpeter;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jpavlich.bot.Bot;
@@ -13,11 +14,11 @@ public class InvAdd implements ASTNode {
 	}
 	
 	@Override
-	public Object execute(Map<String, Object> symbolTable, Bot bot) {
-		if(operand1.execute(symbolTable, bot) instanceof Double)
-			return -(double)operand1.execute(symbolTable, bot);
+	public Object execute(List<Map<String,Object>> symbolTable, Bot bot, Map<String, Function> functionTable) {
+		if(operand1.execute(symbolTable, bot, functionTable) instanceof Double)
+			return -(double)operand1.execute(symbolTable, bot, functionTable);
 		else
-			return -(int)operand1.execute(symbolTable, bot);
+			return -(int)operand1.execute(symbolTable, bot, functionTable);
 	}
 
 }
