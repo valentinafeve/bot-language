@@ -99,7 +99,7 @@ action returns [ASTNode node]:
 // 2. Variables
 
 vardeclassign returns [ASTNode node]: 
-	LET ID EQUAL expression { $node = new VarLetAssign($ID.text, $expression.node);}
+	LET ID EQUAL orexp { $node = new VarLetAssign($ID.text, $orexp.node);}
 ;
 
 vardecl returns [ASTNode node]: 
@@ -107,7 +107,7 @@ vardecl returns [ASTNode node]:
 ;
 	
 varassign returns [ASTNode node]: 
-	ID EQUAL expression {$node = new VarAssign($ID.text, $expression.node);}
+	ID EQUAL orexp {$node = new VarAssign($ID.text, $orexp.node);}
 ;
 
 dualop returns [ASTNode node]: 
@@ -130,7 +130,7 @@ term returns [ASTNode node]:
 	| 
 	WORD {$node = new Constant($WORD.text.substring(1,$WORD.text.length()-1));}
 	|
-	( ORBRACKET condition {$node = $condition.node;} CRBRACKET )
+	( ORBRACKET orexp {$node = $orexp.node;} CRBRACKET )
 ;
 
 //-----------------------------------------------------------------------------------
@@ -141,14 +141,14 @@ ifbot returns [ASTNode node]:
 		List<ASTNode> body = new ArrayList<ASTNode>();
 		List<ASTNode> elseBody = new ArrayList<ASTNode>();
 	}
-	IF ORBRACKET condition CRBRACKET
+	IF ORBRACKET orexp CRBRACKET
 	BEGIN 
 		(s1=sentence {body.add($s1.node);})* 
 	END SEMMICOLON 
 	(ELSE BEGIN 
 		(s2=sentence {elseBody.add($s2.node);})*
 	END SEMMICOLON)?
-	{$node = new IfBot($condition.node,body,elseBody);}
+	{$node = new IfBot($orexp.node,body,elseBody);}
 	
 	/*
 	(
@@ -175,22 +175,22 @@ whilebot returns [ASTNode node]:
 	{
 		List<ASTNode> body = new ArrayList<ASTNode>();
 	}
-	WHILE ORBRACKET condition CRBRACKET 
+	WHILE ORBRACKET orexp CRBRACKET 
 	BEGIN 
 		(sentence {body.add($sentence.node);})*
 	END SEMMICOLON
-	{$node = new WhileBot($condition.node,body);}
+	{$node = new WhileBot($orexp.node,body);}
 ;
 
 forbot returns [ASTNode node]: 
 	{
 		List<ASTNode> body = new ArrayList<ASTNode>();
 	}
-	FOR ORBRACKET init SEMMICOLON condition SEMMICOLON ender CRBRACKET 
+	FOR ORBRACKET init SEMMICOLON orexp SEMMICOLON ender CRBRACKET 
 	BEGIN 
 		(sentence {body.add($sentence.node);})*
 	END SEMMICOLON
-	{$node = new ForBot($init.node,$condition.node,$ender.node,body);}
+	{$node = new ForBot($init.node,$orexp.node,$ender.node,body);}
 ;
 
 init returns [ASTNode node]: 
@@ -256,28 +256,43 @@ inverse returns [ASTNode node]:
 ;
 
 //-----------------------------------------------------------------------------------
-// 8. y 9. Expresiones lógicas y Expresiones de Comparación
+// 8. Expresiones lógicas
 
-condition returns [ASTNode node]: 
-	(c1=expression {$node = $c1.node;} (
+explogical returns [ASTNode node]:
+	comparation {$node = $comparation.node;}  
+	|
+	(NOT comparation {$node = new Not($comparation.node);})
+;
+
+andexp returns [ASTNode node]:
+	e1=explogical {$node = $e1.node;} (
+		AND e2=explogical {$node = new And($node,$e2.node);}	
+	)*
+;
+
+orexp returns [ASTNode node]:
+	e1=andexp {$node = $e1.node;} (
+		OR e2=andexp {$node = new Or($node,$e2.node);}
+	)*
+;
+ 
+//-----------------------------------------------------------------------------------
+// 9. Expresiones de Comparación
+
+comparation returns [ASTNode node]:
+	c1=expression {$node = $c1.node;} (
 		(NOTEQ c2=expression {$node = new NotEquals($node,$c2.node);})
 		|
-		(EQUALS c2=expression  {$node = new Equals($node,$c2.node);})
+		(EQUALS c2=expression {$node = new Equals($node,$c2.node);})
 		|
-		(GREQ c2=expression  {$node = new GreatEquals($node,$c2.node);})
+		(GREQ c2=expression {$node = new GreatEquals($node,$c2.node);})
 		|
-		(LSEQ c2=expression  {$node = new LessEquals($node,$c2.node);})
+		(LSEQ c2=expression {$node = new LessEquals($node,$c2.node);})
 		|
-		(GREAT c2=expression  {$node = new Greater($node,$c2.node);})
+		(GREAT c2=expression {$node = new Greater($node,$c2.node);})
 		|
-		(LESS c2=expression  {$node = new Lesser($node,$c2.node);})
-		|
-		(AND c2=expression  {$node = new And($node,$c2.node);})
-		|
-		(OR c2=expression  {$node = new Or($node,$c2.node);})
-	)*)
-	|
-	NOT expression {$node = new Not($expression.node);}
+		(LESS c2=expression  {$node = new Lesser($node,$c2.node);})	
+	)*		
 ;
 
 //-----------------------------------------------------------------------------------
