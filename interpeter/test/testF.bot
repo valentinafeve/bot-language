@@ -10,10 +10,7 @@ begin
 	writeln "diagonal terminada";
 end;
 
-let a;
-read a;
-if ("N" == "N" and (2+3*5 >= a) or (60-6/2 <> 8))
+if (2<3)
 begin
 	diagonal(5);
 end;
-write a;
